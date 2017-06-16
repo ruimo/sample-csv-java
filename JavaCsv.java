@@ -14,6 +14,7 @@ public class JavaCsv {
     class InitState implements State {
         public State onChar(char c, int lineNo) throws Exception {
             switch (c) {
+            case '\0':
             case '\n':
                 result.add(buf.toString());
                 return endState;
@@ -103,7 +104,16 @@ public class JavaCsv {
     }
 
     public static void main(String... args) throws Exception {
-        final String text = "1,\"2\",3\n5,6,7";
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; ++i) {
+            parse();
+        }
+
+        System.err.printf("Elapsed %,d%n", System.currentTimeMillis() - start);
+    }
+
+    static void parse() throws Exception {
+        final String text = "1,\"漢字データ\",3\n5,あいうえお,7";
         Iterator<Character> it = new Iterator<Character>() {
             int idx = 0;
             public boolean hasNext() {
@@ -119,11 +129,7 @@ public class JavaCsv {
         };
 
         while (it.hasNext()) {
-            for (String f: new JavaCsv().parseLine(new IteratorWithLineNo(it))) {
-                System.out.print(f);
-                System.out.print(' ');
-            }
-            System.out.println();
+            new JavaCsv().parseLine(new IteratorWithLineNo(it));
         }
     }
 }
