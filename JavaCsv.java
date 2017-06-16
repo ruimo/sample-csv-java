@@ -113,7 +113,7 @@ public class JavaCsv {
     }
 
     static void parse() throws Exception {
-        final String text = "1,\"漢字データ\",3\n5,あいうえお,7";
+        final String text = "1,\"2\",3\n5,6,7";
         Iterator<Character> it = new Iterator<Character>() {
             int idx = 0;
             public boolean hasNext() {
